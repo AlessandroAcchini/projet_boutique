@@ -1,0 +1,103 @@
+<?php
+//Initialisation du stock
+$articles = ["Jeans", "Lunettes", "Chaussures", "Polo", "Sweat"];
+$quantites = [5, 5, 5, 5, 5];
+
+//Affichage des articles avec la boucle for
+echo "Liste des articles disponibles : " . PHP_EOL;
+for ($i = 0; $i < count($articles); $i++) {
+    echo "$i: $articles[$i]" . PHP_EOL;
+}
+
+
+echo "Liste des articles disponibles : " . PHP_EOL;
+foreach ($articles as $numero => $article) {
+    echo "$numero: $article" . PHP_EOL;
+}
+
+//Gestion des stocks
+echo "État du stock initial : " . PHP_EOL;
+for ($i = 0; $i < count($articles); $i++) {
+    echo "$articles[$i] Stock: $quantites[$i]";
+}
+
+//Réalisation d'une vente
+function vendreArticle($articles, $quantites)
+{
+    $numero = (int)readline("Choisissez un article par son numéro pour le vendre 0-4 : ");
+    $quantiteVendue = (int)readline("Quantité à vendre : ");
+
+    if ($quantiteVendue > $quantites[$numero]) {
+        echo "Stock insuffisant pour $articles[$numero] " . PHP_EOL;
+    } else {
+        $quantites[$numero] -= $quantiteVendue;
+        echo "Vente de $quantiteVendue $articles[$numero]" . PHP_EOL;
+    }
+}
+
+vendreArticle($articles, $quantites);
+
+//Réappro du Stock
+function reapprovisionnementArticle($articles, $quantites)
+{
+    $numero = (int)readline("Choisissez un article à réapprovisionner (0-4)");
+    $quantiteAjoutee = (int)readline("Quantité à ajouter : ");
+
+    $quantites[$numero] += $quantiteAjoutee;
+    echo "Nouvelle quantité en stock pour $articles[$numero] : $quantites[$numero]" . PHP_EOL;
+}
+
+reapprovisionnementArticle($articles, $quantites);
+
+// État du stock
+echo "État actuel du stock : " . PHP_EOL;
+foreach ($articles as $numero => $article) {
+    echo "$article -  Stock: $quantites[$numero]";
+}
+
+//Verif des articles en rupture de stock
+echo "Articles en rupture de stock : " . PHP_EOL;
+foreach ($quantites as $numero => $quantite) {
+    if ($quantite == 0) {
+        echo "$articles[$numero]  " . PHP_EOL;
+    }
+}
+
+//Suivi des ventes par article
+$ventesTotales = array_fill(0, count($articles), 0);
+
+function vendreArticleSuivi(&$articles, &$quantites, &$ventesTotales)
+{
+    $numero = (int)readline("Choisissez un article par son numero pour vendre (0-4)");
+    $quantiteVendue = (int)readline("Quantité à vendre : ");
+
+    if ($quantiteVendue > $quantites[$numero]) {
+        echo "Stock insuffisant pour $articles[$numero] " . PHP_EOL;
+    } else {
+        $quantites[$numero] -= $quantiteVendue;
+        $ventesTotales[$numero] += $quantiteVendue;
+        echo "Vente de $quantiteVendue $articles[$numero] " . PHP_EOL;
+    }
+}
+
+//Affichage des ventes totales
+echo " Ventes totales par article : " . PHP_EOL;
+foreach ($articles as $numero => $article) {
+    echo "$article - Total vendu : $ventesTotales[$numero] " . PHP_EOL;
+}
+
+//Suppression d'un Article
+function supprimerArticle($articles, $quantites)
+{
+    $numero = (int)readline("Choisissez un article à supprimer (0-4) : ");
+
+    array_splice($articles, $numero, 1);
+    array_splice($quantites, $numero, 1);
+
+    echo "Article supprimé. Liste des articles restants : " . PHP_EOL;
+    foreach ($articles as $numero => $article) {
+        echo "$numero: $article - Stock: $quantites[$numero] " . PHP_EOL;
+    }
+}
+
+supprimerArticle($articles, $quantites);
